@@ -3,12 +3,11 @@ import requests
 import os
 import json
 
+# Replace 'your_api_key_here' with your actual OpenWeatherMap API key
+os.environ['MM_open_weather'] = 'eef94865433aba6d8689c10961915c02'
+
 # Set Streamlit title
 st.title("Weather NOW")
-export MM_open_weather=eef94865433aba6d8689c10961915c02
-echo 'export MM_open_weather=eef94865433aba6d8689c10961915c02 >> ~/.bashrc
-
-
 
 # Retrieve the OpenWeatherMap API key from the environment variable
 openweather_api = os.environ.get('MM_open_weather')
