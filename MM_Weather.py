@@ -16,13 +16,14 @@ else:
 
     if st.button('Get Weather'):
         # Set the base URL for the OpenWeatherMap API
-        base_url = "http://api.openweathermap.org/data/2.5/weather?"
+        base_url = 'http://api.openweathermap.org/geo/1.0/direct?q='
+        #{city name},{state code},{country code}{limit}&appid={API key}
 
         # Set the API key
         api_key = openweather_api
 
         # Create the URL for the API request with 'q' parameter for the city name
-        url = base_url + "q=" + location + "&appid=" + api_key
+        url = base_url  + location + '&limit=3'+'&appid=' + api_key
 
         # Send the request to the API
         response = requests.get(url)
