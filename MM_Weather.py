@@ -2,9 +2,17 @@ import streamlit as st
 import requests
 import os
 import json
+from st_components import st_icon
 
 # Replace 'your_api_key_here' with your actual OpenWeatherMap API key
 os.environ['MM_open_weather'] = 'eef94865433aba6d8689c10961915c02'
+# Set the page title
+st.set_page_config(
+    page_title="Weather Now",
+    page_icon=":partly_sunny:",  # You can use emojis as icons
+    layout="wide",  # Adjust the layout
+    initial_sidebar_state="expanded"  # Expand the sidebar by default
+)
 
 # Set Streamlit title
 st.title("Weather NOW")
@@ -34,11 +42,20 @@ else:
         if response.status_code == 200:
             # Parse the JSON response
             data = json.loads(response.text)
+            # Create a DataFrame to store weather data
+            weather_data = {
+                "Attribute": ["City", "Description", "Temperature (°C)", "Humidity (%)"],
+                "Value": [data['name'], data['weather'][0]['description'], data['main']['temp'], data['main']['humidity']]
+            }
 
-            # Display the weather data using Streamlit
-            st.write(f"Weather in {data['name']}: {data['weather'][0]['description']}")
-            st.write(f"Temperature: {data['main']['temp']}°C")
-            st.write(f"Humidity: {data['main']['humidity']}%")
+            df = pd.DataFrame(weather_data)
+
+            # Display weather icon
+            weather_icon = data['weather'][0]['icon']
+            st_icon(weather_icon, width=100)
+
+            # Display the DataFrame using pandas
+            st.table(df)
         else:
             st.error(f"Error: Unable to retrieve weather data. Status code: {response.status_code}")
 
