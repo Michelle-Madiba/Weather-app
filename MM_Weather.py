@@ -5,7 +5,10 @@ import json
 
 # Set Streamlit title
 st.title("Weather NOW")
-setx MM_open_weather eef94865433aba6d8689c10961915c02
+export MM_open_weather=eef94865433aba6d8689c10961915c02
+echo 'export MM_open_weather=eef94865433aba6d8689c10961915c02 >> ~/.bashrc
+
+
 
 # Retrieve the OpenWeatherMap API key from the environment variable
 openweather_api = os.environ.get('MM_open_weather')
