@@ -5,6 +5,7 @@ import json
 
 # Set Streamlit title
 st.title("Weather NOW")
+setx MM_open_weather eef94865433aba6d8689c10961915c02
 
 # Retrieve the OpenWeatherMap API key from the environment variable
 openweather_api = os.environ.get('MM_open_weather')
