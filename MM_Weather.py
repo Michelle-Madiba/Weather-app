@@ -1,3 +1,5 @@
+pip install st-components
+
 import streamlit as st
 import requests
 import os
