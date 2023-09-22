@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import os
 import json
-from st_components import st_icon
+import st_icon
 
 # Replace 'your_api_key_here' with your actual OpenWeatherMap API key
 os.environ['MM_open_weather'] = 'eef94865433aba6d8689c10961915c02'
