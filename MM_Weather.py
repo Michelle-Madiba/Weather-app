@@ -2,8 +2,10 @@ import streamlit as st
 import requests
 import os
 import json
-import pandas as pd
 
+
+# Replace 'your_api_key_here' with your actual OpenWeatherMap API key
+os.environ['MM_open_weather'] = 'eef94865433aba6d8689c10961915c02'
 # Set the page title
 st.set_page_config(
     page_title="Weather Now",
@@ -15,7 +17,6 @@ st.set_page_config(
 # Set Streamlit title
 st.title("Weather NOW")
 
-os.environ['MM_open_weather'] = 'eef94865433aba6d8689c10961915c02'
 # Retrieve the OpenWeatherMap API key from the environment variable
 openweather_api = os.environ.get('MM_open_weather')
 if not openweather_api:
@@ -26,13 +27,14 @@ else:
 
     if st.button('Get Weather'):
         # Set the base URL for the OpenWeatherMap API
-        base_url = 'http://api.openweathermap.org/data/2.5/weather?q='  # Updated API endpoint
+        base_url = 'http://api.openweathermap.org/geo/1.0/direct?q='
+        #{city name},{state code},{country code}{limit}&appid={API key}
 
         # Set the API key
         api_key = openweather_api
 
-        # Create the URL for the API request
-        url = f'{base_url}{location}&appid={api_key}&units=metric'  # Added units parameter for Celsius
+        # Create the URL for the API request with 'q' parameter for the city name
+        url = base_url  + location + '&limit=3'+'&appid=' + api_key
 
         # Send the request to the API
         response = requests.get(url)
@@ -40,25 +42,21 @@ else:
         if response.status_code == 200:
             # Parse the JSON response
             data = json.loads(response.text)
+            # Create a DataFrame to store weather data
+            weather_data = {
+                "Attribute": ["City", "Description", "Temperature (°C)", "Humidity (%)"],
+                "Value": [data['name'], data['weather'][0]['description'], data['main']['temp'], data['main']['humidity']]
+            }
 
-            # Check if 'name' key exists in the response (indicating a valid city)
-            if 'name' in data:
-                # Create a DataFrame to store weather data
-                weather_data = {
-                    "Attribute": ["City", "Description", "Temperature (°C)", "Humidity (%)"],
-                    "Value": [data['name'], data['weather'][0]['description'], data['main']['temp'], data['main']['humidity']]
-                }
+            df = pd.DataFrame(weather_data)
 
-                df = pd.DataFrame(weather_data)
+            # Display weather icon
+            weather_icon = data['weather'][0]['icon']
+            st_icon(weather_icon, width=100)
 
-                # Display weather icon
-                weather_icon = data['weather'][0]['icon']
-                st.image(f'http://openweathermap.org/img/wn/{weather_icon}.png', width=100)  # Display weather icon
-
-                # Display the DataFrame using pandas
-                st.table(df)
-            else:
-                st.error(f"Error: City not found.")
+            # Display the DataFrame using pandas
+            st.table(df)
         else:
             st.error(f"Error: Unable to retrieve weather data. Status code: {response.status_code}")
+
 
