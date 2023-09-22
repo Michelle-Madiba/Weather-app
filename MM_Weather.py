@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import pandas as pd
 
 # Set the page title
 st.set_page_config(
@@ -28,11 +29,19 @@ if st.button('Get Weather'):
     response = requests.get(base_url, params=params)
 
     if response.status_code == 200:
-        data = response.json()for item in data:
-    st.write(f"Temperature: {item['main']['temp']}°C")
-    st.write(f"Description: {item['weather'][0]['description'].capitalize()}")
-    st.write(f"Humidity: {item['main']['humidity']}%")
-    st.write(f"Pressure: {item['main']['pressure']} hPa")
+        data = response.json()
+        
+        # Create a DataFrame from the JSON data
+        df = pd.json_normalize(data)
+
+        # Display the DataFrame using pandas
+        st.write(df)
+    else:
+        st.error(f"Error: Unable to retrieve weather data. Status code: {response.status_code}")
+
+# Display a footer with attribution to OpenWeatherMap
+st.markdown("Data provided by [OpenWeatherMap](https://openweathermap.org/).")
+
 
 
 # Display a footer with attribution to OpenWeatherMap
